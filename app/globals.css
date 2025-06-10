@@ -1,16 +1,25 @@
+/* @import "tailwindcss"; */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import "tailwindcss";
+:root {
+  --primary: #6082B6;
+}
 
 html {
   overflow: hidden auto;
 }
 
 body {
-  background: radial-gradient(white, #F4F4F4);
+  background: #f4f4f4;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+  background: var(--primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
 }
 
 @layer utilities {
