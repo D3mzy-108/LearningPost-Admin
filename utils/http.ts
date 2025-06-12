@@ -1,4 +1,13 @@
-async function postFunction(url: string, requestBody: object): Promise<object> {
+interface HttpResponse {
+  success: boolean;
+  message: string;
+  data: any;
+}
+
+async function postFunction(
+  url: string,
+  requestBody: object
+): Promise<HttpResponse> {
   try {
     // SEND POST REQUEST TO API
     const response = await fetch(url, {
@@ -14,15 +23,19 @@ async function postFunction(url: string, requestBody: object): Promise<object> {
       return {
         success: false,
         message: `HTTP Error ${response.status}`,
-      };
+      } as HttpResponse;
     }
     const data = await response.json();
-    return data;
+    return {
+      success: data.success,
+      message: data.message,
+      data: data,
+    } as HttpResponse;
   } catch (error) {
     return {
       success: false,
       message: error,
-    };
+    } as HttpResponse;
   }
 }
 
@@ -35,15 +48,19 @@ async function getFunction(url: string): Promise<object> {
       return {
         success: false,
         message: `HTTP Error ${response.status}`,
-      };
+      } as HttpResponse;
     }
     const data = await response.json();
-    return data;
+    return {
+      success: data.success,
+      message: data.message,
+      data: data,
+    } as HttpResponse;
   } catch (error) {
     return {
       success: false,
       message: error,
-    };
+    } as HttpResponse;
   }
 }
 
