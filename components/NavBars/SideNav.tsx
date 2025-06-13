@@ -4,6 +4,7 @@ import logo from "@/assets/images/logo.png";
 import analyticsIcon from "@/assets/icons/analytics.svg";
 import contentIcon from "@/assets/icons/content.svg";
 import feedbackIcon from "@/assets/icons/feedback.svg";
+import partnershipIcon from "@/assets/icons/partnership.svg";
 import logoutIcon from "@/assets/icons/logout.svg";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -17,7 +18,7 @@ export default function SideNav() {
       href: "/portal",
       icon: analyticsIcon,
       text: "Analytics",
-      isActive: true,
+      isActive: false,
     },
     {
       id: "content-and-services",
@@ -31,6 +32,13 @@ export default function SideNav() {
       href: "/portal",
       icon: feedbackIcon,
       text: "Feedback",
+      isActive: false,
+    },
+    {
+      id: "partner",
+      href: "/portal",
+      icon: partnershipIcon,
+      text: "Partner Program",
       isActive: false,
     },
   ];
