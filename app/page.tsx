@@ -5,13 +5,13 @@ import PrimaryBtn from "@/components/Buttons/PrimaryBtn";
 import React, { useEffect, useState } from "react";
 import { LOGIN_URL } from "@/utils/urls";
 import http from "@/utils/http";
-import Message, { addMessage, MessageObject } from "@/components/MessageDIalog";
 import { storeItem } from "@/utils/local_storage_utils";
 import { __isLastLoginToday } from "@/utils/auth";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/context/ToastContext";
 
 export default function Home() {
-  const [messages, setMessages] = useState<MessageObject[]>([]);
+  const { showToast } = useToast();
   const router = useRouter();
 
   async function login(e: React.FormEvent) {
@@ -25,13 +25,7 @@ export default function Home() {
         password: password,
       });
 
-      setMessages(
-        addMessage(messages, {
-          id: "",
-          success: data.success,
-          messageTxt: data.message,
-        })
-      );
+      showToast(data.message, data.success ? "success" : "error");
 
       if (data.success) {
         storeItem("user", data.data.user);
@@ -39,13 +33,7 @@ export default function Home() {
       }
     } catch (e) {
       console.log(`ERROR: ${e}`);
-      setMessages(
-        addMessage(messages, {
-          id: "",
-          success: false,
-          messageTxt: "Request failed.",
-        })
-      );
+      showToast("Request failed.", "error");
     }
   }
 
@@ -58,11 +46,11 @@ export default function Home() {
     }
 
     autoLogin();
-  }, []);
+  }, [router]);
 
   return (
     <>
-      <section className="w-full bg-white min-h-screen lg:p-12">
+      <section className="w-full bg-white min-height-screen lg:p-12">
         <div className="w-full max-w-lg py-6 px-2">
           <Image
             src={logo}
@@ -104,7 +92,6 @@ export default function Home() {
           </form>
         </div>
       </section>
-      <Message messages={messages} setMessages={setMessages} />
     </>
   );
 }

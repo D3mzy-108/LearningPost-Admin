@@ -39,7 +39,7 @@ async function postFunction(
   }
 }
 
-async function getFunction(url: string): Promise<object> {
+async function getFunction(url: string): Promise<HttpResponse> {
   try {
     const response = await fetch(url);
 

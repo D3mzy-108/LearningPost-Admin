@@ -22,6 +22,16 @@ button {
   border-radius: 9999px;
 }
 
+.height-screen {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.min-height-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

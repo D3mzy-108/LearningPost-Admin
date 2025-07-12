@@ -6,65 +6,50 @@ import contentIcon from "@/assets/icons/content.svg";
 import feedbackIcon from "@/assets/icons/feedback.svg";
 import partnershipIcon from "@/assets/icons/partnership.svg";
 import logoutIcon from "@/assets/icons/logout.svg";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+
+const NAV_LINKS = [
+  {
+    id: "dashboard",
+    href: "/portal",
+    icon: analyticsIcon,
+    text: "Analytics",
+  },
+  {
+    id: "content-and-services",
+    href: "/portal/content-and-services",
+    icon: contentIcon,
+    text: "Content & Services",
+  },
+  {
+    id: "feedback",
+    href: "/portal/feedback",
+    icon: feedbackIcon,
+    text: "Feedback",
+  },
+  {
+    id: "partner",
+    href: "/portal/partner-program",
+    icon: partnershipIcon,
+    text: "Partner Program",
+  },
+];
 
 export default function SideNav() {
   const router = useRouter();
-  const navLinks = [
-    {
-      id: "dashboard",
-      href: "/portal",
-      icon: analyticsIcon,
-      text: "Analytics",
-      isActive: false,
-    },
-    {
-      id: "content-and-services",
-      href: "/portal",
-      icon: contentIcon,
-      text: "Content & Services",
-      isActive: false,
-    },
-    {
-      id: "feedback",
-      href: "/portal",
-      icon: feedbackIcon,
-      text: "Feedback",
-      isActive: false,
-    },
-    {
-      id: "partner",
-      href: "/portal",
-      icon: partnershipIcon,
-      text: "Partner Program",
-      isActive: false,
-    },
-  ];
+  const pathname = usePathname();
 
   function logout() {
     router.push("/");
     localStorage.removeItem("user");
   }
 
-  useEffect(() => {
-    function setActiveLink() {
-      const currentRoute = window.location.pathname;
-      let activeIsSet = false;
-      navLinks.forEach((navLink) => {
-        if (currentRoute.toLowerCase().includes(navLink.id.toLowerCase())) {
-          navLink.isActive = true;
-          activeIsSet = true;
-        }
-      });
-      if (!activeIsSet) {
-        navLinks[0].isActive = true;
-      }
-    }
+  // Find the most specific active link by sorting matches by href length
+  const activeLink = NAV_LINKS.filter((link) =>
+    pathname.startsWith(link.href)
+  ).sort((a, b) => b.href.length - a.href.length)[0];
 
-    setActiveLink();
-  }, []);
   return (
     <>
       <div className="w-full min-h-screen py-4 flex flex-col gap-12">
@@ -72,11 +57,12 @@ export default function SideNav() {
 
         {/* NAV LINKS */}
         <ul className="m-0 p-0 flex flex-col gap-2">
-          {navLinks.map((navLink) => {
+          {NAV_LINKS.map((navLink) => {
+            const isActive = navLink.id === activeLink?.id;
             return (
               <li
                 className={`w-full py-4 px-5 rounded-full ${
-                  navLink.isActive ? "bg-gray-300" : "bg-transparent"
+                  isActive ? "bg-gray-300" : "bg-transparent"
                 } flex gap-4 items-center hover:bg-gray-200`}
                 key={navLink.id}
               >
@@ -89,9 +75,7 @@ export default function SideNav() {
                 <div className="flex-1 text-[15px]">
                   <Link
                     href={navLink.href}
-                    className={
-                      navLink.isActive ? "text-black" : "text-black/70"
-                    }
+                    className={isActive ? "text-black" : "text-black/70"}
                   >
                     {navLink.text}
                   </Link>
