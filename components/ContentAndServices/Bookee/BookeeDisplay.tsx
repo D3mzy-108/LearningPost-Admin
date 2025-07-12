@@ -1,20 +1,26 @@
-/* eslint-disable @next/next/no-img-element */
+import Pagination from "@/components/NavBars/Pagination";
 import { useToast } from "@/context/ToastContext";
 import http from "@/utils/http";
 import { DOMAIN, GET_BOOKS_URL } from "@/utils/urls";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import BookCard, { Book } from "./BookCard";
+import { useDialog } from "@/context/DialogContext";
+import BookForm from "./BookForm";
 
 export default function BookeeDisplay() {
   const { showToast } = useToast();
+  const { showDialog } = useDialog();
   const [books, setBooks] = useState<Book[]>([]);
   const [page, setPage] = useState<string>("0 of 0");
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [maxPageNumber, setMaxPageNumber] = useState<number>(1);
+  const [searchVal, setSearchVal] = useState<string>("");
 
   const loadBooks = useCallback(
-    async (search_string: string) => {
-      const response = await http.get(GET_BOOKS_URL(search_string, pageNumber));
+    async (search_string: string, pageNum: number) => {
+      setSearchVal(search_string);
+      const response = await http.get(GET_BOOKS_URL(search_string, pageNum));
       if (response.success) {
         setBooks(response.data.books);
         setPage(response.data.page);
@@ -23,17 +29,18 @@ export default function BookeeDisplay() {
         showToast(response.message, "error");
       }
     },
-    [showToast, pageNumber]
+    [showToast]
   );
 
   function searchForBooks(e: FormEvent) {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    loadBooks(formData.get("s")?.toString() || "");
+    loadBooks(formData.get("s")?.toString() || "", 1);
+    setPageNumber(1);
   }
 
   useEffect(() => {
-    loadBooks("");
+    loadBooks("", 1);
   }, [loadBooks]);
   return (
     <>
@@ -56,128 +63,40 @@ export default function BookeeDisplay() {
             className="w-full max-w-[150px] px-3 py-2 border-b-2 border-b-black/60 placeholder:text-black/80"
             placeholder="Search Books..."
           />
-          <Link
-            href={""}
+          <button
+            type="button"
+            onClick={() => {
+              showDialog(
+                <>
+                  <BookForm instance={null} />
+                </>
+              );
+            }}
             className="pl-3 pr-4 py-1 rounded-t-md rounded-b-none border-2 border-b-0 border-black/60 text-black bg-transparent flex items-center gap-3"
           >
             <span className="text-2xl">+</span>
             <span className="text-sm">New Book</span>
-          </Link>
+          </button>
           <div className="w-4 border-b-2 border-b-black/60"></div>
         </form>
 
         {/* BOOK GRID */}
-        <div className="w-full my-5 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2">
+        <div className="w-full my-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {books.map((book) => (
             <BookCard key={book.id} book={book} />
           ))}
         </div>
 
-        <div className="w-full flex justify-center">
-          <div className="w-4 border-b-2 border-b-black/60"></div>
-          <button
-            onClick={() => {
-              if (pageNumber <= 1) {
-                setPageNumber(1);
-              } else {
-                setPageNumber(pageNumber - 1);
-              }
-            }}
-            className="bg-transparent border-2 border-b-0 border-black/60 text-black/80 text-lg py-2 px-5 rounded-t-md rounded-b-none grid place-items-center"
-          >
-            <span>&larr;</span>
-          </button>
-          <button className="bg-transparent border-b-2 border-b-black/60 text-black/80 text-sm py-2 px-6 rounded-none grid place-items-center">
-            <span>{page}</span>
-          </button>
-          <button
-            onClick={() => {
-              if (pageNumber >= maxPageNumber) {
-                setPageNumber(maxPageNumber);
-              } else {
-                setPageNumber(pageNumber + 1);
-              }
-            }}
-            className="bg-transparent border-2 border-b-0 border-black/60 text-black/80 text-lg py-2 px-5 rounded-t-md rounded-b-none grid place-items-center"
-          >
-            <span>&rarr;</span>
-          </button>
-          <div className="w-4 border-b-2 border-b-black/60"></div>
-        </div>
+        <Pagination
+          page={page}
+          initialPageNumber={pageNumber}
+          maxPageNumber={maxPageNumber}
+          onPageChange={(pageNum) => {
+            loadBooks(searchVal, pageNum);
+            setPageNumber(pageNum);
+          }}
+        />
       </div>
     </>
-  );
-}
-
-interface Book {
-  id: string | number;
-  cover: string;
-  title: string;
-  author: string;
-  bookmark_count: number;
-  chapter_count: number;
-  rating: string | number;
-}
-
-function BookCard({ book }: { book: Book }) {
-  return (
-    <div className="w-full p-2">
-      <img
-        src={`${
-          book.cover.includes("https://") || book.cover.includes("http://")
-            ? book.cover
-            : DOMAIN + book.cover
-        }`}
-        alt={book.title}
-        onError={(e) => {
-          (e.target as HTMLImageElement).src =
-            "https://placehold.co/50x50/EEE/333333?text=";
-        }} // Fallback image
-        style={{
-          objectFit: "cover",
-        }}
-        className="w-full aspect-[3/2] rounded-xl shadow-lg"
-      />
-      <div className="w-full py-3 px-2">
-        <div className="w-full flex gap-2">
-          {/* BOOK DETAILS */}
-          <div className="flex-1 flex flex-col">
-            <legend className="font-semibold text-lg">{book.title}</legend>
-            <span className="text-black/60 text-sm">
-              {book.author} - {book.bookmark_count} Saves
-            </span>
-            <div className="w-full flex gap-2 flex-wrap mt-2">
-              <div className="w-fit px-2 py-1 text-xs rounded-md bg-blue-600/10 text-blue-600">
-                <span>{"EPUB"}</span>
-              </div>
-              <div className="w-fit px-2 py-1 text-xs rounded-md bg-blue-600/10 text-blue-600">
-                <span>{book.chapter_count} Chapters</span>
-              </div>
-            </div>
-          </div>
-
-          {/* BOOK RATING */}
-          <span className="text-orange-500">{book.rating}&#x2605;</span>
-        </div>
-
-        {/* BOOK ACTIONS */}
-        <div className="w-full mt-3 flex gap-2 text-sm">
-          <Link
-            href={""}
-            className="w-full flex-1 bg-transparent border border-black/60 py-2 px-3 flex gap-2 items-center justify-center rounded-full truncate"
-          >
-            <span>&#9998;</span>
-            <span>Modify</span>
-          </Link>
-          <Link
-            href={""}
-            className="w-full flex-1 bg-transparent border border-black/60 py-2 px-3 flex gap-2 items-center justify-center rounded-full truncate"
-          >
-            <span>&#9776;</span>
-            <span>Chapters</span>
-          </Link>
-        </div>
-      </div>
-    </div>
   );
 }

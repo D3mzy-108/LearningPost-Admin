@@ -1,5 +1,4 @@
-// context/ToastContext.tsx
-"use client"; // This context provider and its children will be client components
+"use client";
 
 import ToastMessage from "@/components/ToastMessage";
 import React, {
@@ -104,6 +103,8 @@ export const ToastProvider: React.FC<React.PropsWithChildren> = ({
 
   return (
     <ToastContext.Provider value={contextValue}>
+      {children}
+
       {/* Container for all toast messages, positioned fixed on the screen */}
       {messages.length > 0 ? (
         <div
@@ -126,8 +127,6 @@ export const ToastProvider: React.FC<React.PropsWithChildren> = ({
           </ul>
         </div>
       ) : null}
-
-      {children}
     </ToastContext.Provider>
   );
 };

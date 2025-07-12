@@ -23,11 +23,11 @@ export default function PortalLayout({
     autoLogout();
   }, [router]);
   return (
-    <div className="w-full min-height-screen flex pt-4 pl-4 gap-4 relative">
-      <div className="w-[16rem] height-screen overflow-auto sticky top-4">
+    <div className="w-full min-height-screen flex pt-4 pl-4 max-sm:pl-2 gap-4  max-sm:gap-2 relative">
+      <div className="w-[16rem] min-w-[2rem] max-sm:w-[2rem] height-screen overflow-auto sticky top-4">
         <SideNav />
       </div>
-      <div className="w-full flex-1 min-height-screen rounded-t-2xl bg-white p-4">
+      <div className="flex-1 min-height-screen rounded-t-2xl bg-white p-4">
         {children}
       </div>
     </div>

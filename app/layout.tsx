@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ToastProvider } from "@/context/ToastContext";
+import { DialogProvider } from "@/context/DialogContext";
 
 export const metadata: Metadata = {
   title: "LearningPost | Admin Login",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="w-full">
-        <ToastProvider>{children}</ToastProvider>
+        <ToastProvider>
+          <DialogProvider>{children}</DialogProvider>
+        </ToastProvider>
       </body>
     </html>
   );
