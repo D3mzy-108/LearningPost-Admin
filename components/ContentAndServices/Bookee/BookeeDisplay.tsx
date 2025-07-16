@@ -68,7 +68,7 @@ export default function BookeeDisplay() {
             onClick={() => {
               showDialog(
                 <>
-                  <BookForm instance={null} />
+                  <BookForm instance={null} isOrganizationInstance={false} />
                 </>
               );
             }}

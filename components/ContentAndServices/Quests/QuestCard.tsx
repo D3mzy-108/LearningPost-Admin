@@ -37,8 +37,9 @@ export default function QuestCard({ quest }: { quest: Quest }) {
         }} // Fallback image
         style={{
           objectFit: "cover",
+          filter: "brightness(90%)",
         }}
-        className="w-full aspect-[3/2] rounded-xl shadow-lg"
+        className="w-full aspect-[5/4] rounded-xl shadow-lg mb-1"
       />
       <div className="w-full py-3 px-2">
         <div className="w-full flex gap-2">
@@ -72,7 +73,7 @@ export default function QuestCard({ quest }: { quest: Quest }) {
             onClick={() => {
               showDialog(
                 <>
-                  <QuestForm instance={quest} />
+                  <QuestForm instance={quest} isOrganizationInstance={false} />
                 </>
               );
             }}

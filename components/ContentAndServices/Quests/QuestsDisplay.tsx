@@ -71,7 +71,7 @@ export default function QuestsDisplay() {
             onClick={() => {
               showDialog(
                 <>
-                  <QuestForm instance={null} />
+                  <QuestForm instance={null} isOrganizationInstance={false} />
                 </>
               );
             }}
@@ -84,7 +84,7 @@ export default function QuestsDisplay() {
         </form>
 
         {/* QUEST GRID */}
-        <div className="w-full my-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+        <div className="w-full my-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {quests.map((quest) => (
             <QuestCard key={quest.id} quest={quest} />
           ))}

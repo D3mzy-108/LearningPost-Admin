@@ -36,6 +36,7 @@ export default function BookCard({ book }: { book: Book }) {
         style={{
           objectFit: "cover",
           objectPosition: "top",
+          filter: "brightness(90%)",
         }}
         className="w-full aspect-[5/4] rounded-xl px-12 pt-6 pb-0"
       />
@@ -68,7 +69,7 @@ export default function BookCard({ book }: { book: Book }) {
             onClick={() => {
               showDialog(
                 <>
-                  <BookForm instance={book} />
+                  <BookForm instance={book} isOrganizationInstance={false} />
                 </>
               );
             }}
