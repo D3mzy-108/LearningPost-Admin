@@ -1,5 +1,5 @@
-// export const DOMAIN = "http://localhost:2002";
-export const DOMAIN = "https://api.learningpost.ng";
+export const DOMAIN = "http://localhost:2002";
+// export const DOMAIN = "https://api.learningpost.ng";
 export const LOGIN_URL = `${DOMAIN}/portal/login/`;
 
 export const LOAD_EXT_FORM_DATA_URL = () => {
@@ -25,3 +25,9 @@ export const GET_BOOKS_URL = (search: string, page: number) => {
 export const SAVE_BOOK_INSTANCE_URL = () => {
   return `${DOMAIN}/portal/admin/library/save-instance/`;
 };
+
+// ==================================================
+// SUBSCRIPTION URLS
+// ==================================================
+export const GET_SUBSCRIPTIONS_URL = `${DOMAIN}/portal/admin/subscription-plans/`;
+export const SAVE_SUBSCRIPTION_INSTANCE_URL = `${DOMAIN}/portal/admin/subscription-plans/save-instance/`;
