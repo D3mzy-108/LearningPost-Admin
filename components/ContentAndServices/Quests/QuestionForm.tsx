@@ -205,7 +205,13 @@ function BulkUploadForm({ questId }: { questId: string | number }) {
 
         {/* FILE INPUT FIELS */}
         <div className="w-full flex flex-wrap items-center gap-4 mt-4">
-          <input type="file" name="questions" id="questions" accept=".tsv" />
+          <input
+            type="file"
+            name="questions"
+            id="questions"
+            accept=".tsv"
+            required
+          />
 
           <button
             type="submit"

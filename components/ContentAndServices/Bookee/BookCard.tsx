@@ -61,7 +61,11 @@ export default function BookCard({ book }: { book: Book }) {
             onClick={() => {
               showDialog(
                 <>
-                  <BookForm instance={book} isOrganizationInstance={false} />
+                  <BookForm
+                    instance={book}
+                    isMutableOrganizationInstance={false}
+                    organizationCode={book.organization}
+                  />
                 </>
               );
             }}

@@ -1,15 +1,18 @@
 import Pagination from "@/components/NavBars/Pagination";
 import { useToast } from "@/context/ToastContext";
 import http from "@/utils/http";
-import { DOMAIN, GET_BOOKS_URL } from "@/utils/urls";
-import Link from "next/link";
+import { GET_BOOKS_URL } from "@/utils/urls";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import BookCard from "./BookCard";
 import { useDialog } from "@/context/DialogContext";
 import BookForm from "./BookForm";
 import { Book } from "@/models/BookeeModels";
 
-export default function BookeeDisplay() {
+export default function BookeeDisplay({
+  partnerCode,
+}: {
+  partnerCode: string;
+}) {
   const { showToast } = useToast();
   const { showDialog } = useDialog();
   const [books, setBooks] = useState<Book[]>([]);
@@ -21,7 +24,9 @@ export default function BookeeDisplay() {
   const loadBooks = useCallback(
     async (search_string: string, pageNum: number) => {
       setSearchVal(search_string);
-      const response = await http.get(GET_BOOKS_URL(search_string, pageNum));
+      const response = await http.get(
+        GET_BOOKS_URL(search_string, pageNum, partnerCode)
+      );
       if (response.success) {
         setBooks(response.data.books);
         setPage(response.data.page);
@@ -30,7 +35,7 @@ export default function BookeeDisplay() {
         showToast(response.message, "error");
       }
     },
-    [showToast]
+    [partnerCode, showToast]
   );
 
   function searchForBooks(e: FormEvent) {
@@ -69,7 +74,11 @@ export default function BookeeDisplay() {
             onClick={() => {
               showDialog(
                 <>
-                  <BookForm instance={null} isOrganizationInstance={false} />
+                  <BookForm
+                    instance={null}
+                    isMutableOrganizationInstance={false}
+                    organizationCode={partnerCode}
+                  />
                 </>
               );
             }}

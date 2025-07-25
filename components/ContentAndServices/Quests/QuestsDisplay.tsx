@@ -9,7 +9,11 @@ import QuestForm from "./QuestForm";
 import { useDialog } from "@/context/DialogContext";
 import { Quest } from "@/models/QuestModels";
 
-export default function QuestsDisplay() {
+export default function QuestsDisplay({
+  partnerCode,
+}: {
+  partnerCode: string;
+}) {
   const { showToast } = useToast();
   const { showDialog } = useDialog();
   const [quests, setQuests] = useState<Quest[]>([]);
@@ -22,7 +26,7 @@ export default function QuestsDisplay() {
     async (search_string: string, pageNumber: number) => {
       setSearchVal(search_string);
       const response = await http.get(
-        GET_QUESTS_URL(search_string, pageNumber)
+        GET_QUESTS_URL(search_string, pageNumber, partnerCode)
       );
       if (response.success) {
         setQuests(response.data.quests);
@@ -32,7 +36,7 @@ export default function QuestsDisplay() {
         showToast(response.message, "error");
       }
     },
-    [showToast]
+    [partnerCode, showToast]
   );
 
   function searchForQuest(e: FormEvent) {
@@ -71,7 +75,11 @@ export default function QuestsDisplay() {
             onClick={() => {
               showDialog(
                 <>
-                  <QuestForm instance={null} isOrganizationInstance={false} />
+                  <QuestForm
+                    instance={null}
+                    isMutableOrganizationInstance={false}
+                    organizationCode={partnerCode}
+                  />
                 </>
               );
             }}

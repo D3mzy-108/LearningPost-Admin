@@ -9,10 +9,12 @@ import { Quest } from "@/models/QuestModels";
 
 export default function QuestForm({
   instance,
-  isOrganizationInstance,
+  isMutableOrganizationInstance,
+  organizationCode,
 }: {
   instance: Quest | null;
-  isOrganizationInstance: boolean;
+  isMutableOrganizationInstance: boolean;
+  organizationCode: string | null;
 }) {
   const { showToast } = useToast();
   const { hideDialog } = useDialog();
@@ -87,7 +89,7 @@ export default function QuestForm({
 
   if (
     grades.length === 0 ||
-    (isOrganizationInstance && organizations.length === 0)
+    (isMutableOrganizationInstance && organizations.length === 0)
   ) {
     return <div className="grid place-items-center">Loading...</div>;
   }
@@ -179,7 +181,7 @@ export default function QuestForm({
             </div>
 
             {/* Organization */}
-            {isOrganizationInstance && (
+            {organizationCode !== null && organizationCode.length > 0 ? (
               <div className="flex flex-col">
                 <label
                   htmlFor="organization_code"
@@ -188,25 +190,37 @@ export default function QuestForm({
                   Organization/Partner
                 </label>
 
-                <select
-                  name="organization_code"
-                  id="organization_code"
-                  required
-                  defaultValue={instance?.organization ?? ""}
-                  className="mt-2 block w-full rounded-md border-gray-300 bg-[rgba(0,0,0,.05)] p-3 shadow-sm focus:outline-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                >
-                  <option value="">Select Partner</option>
-                  {organizations.map((organization) => (
-                    <option
-                      value={organization["code"]}
-                      key={organization["code"]}
-                    >
-                      {organization["name"]}
-                    </option>
-                  ))}
-                </select>
+                {isMutableOrganizationInstance ? (
+                  <select
+                    name="organization_code"
+                    id="organization_code"
+                    required
+                    defaultValue={instance?.organization ?? ""}
+                    className={`mt-2 block w-full rounded-md border-gray-300 bg-[rgba(0,0,0,.05)] p-3 shadow-sm focus:outline-indigo-500 focus:ring-indigo-500 sm:text-sm`}
+                  >
+                    <option value="">Select Partner</option>
+                    {organizations.map((organization) => (
+                      <option
+                        value={organization["code"]}
+                        key={organization["code"]}
+                      >
+                        {organization["name"]}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    name="organization_code"
+                    id="organization_code"
+                    defaultValue={organizationCode}
+                    required
+                    readOnly={true}
+                    className="mt-2 block w-full rounded-md border-gray-300 bg-[rgba(0,0,0,.05)] p-3 shadow-sm focus:outline-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                )}
               </div>
-            )}
+            ) : null}
 
             {/* About, Instructions */}
             {textAreaFields.map((field) => (

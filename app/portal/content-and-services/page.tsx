@@ -28,9 +28,9 @@ export default function ContentAndServices() {
   function displayContent() {
     const activeTabId = searchParams.get("id") || tabs[0]?.id;
     if (activeTabId === "quests") {
-      return <QuestsDisplay />;
+      return <QuestsDisplay partnerCode="" />;
     } else if (activeTabId === "bookee") {
-      return <BookeeDisplay />;
+      return <BookeeDisplay partnerCode="" />;
     } else if (activeTabId === "subscriptions") {
       return <SubscriptionPlansDisplay />;
     }

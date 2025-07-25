@@ -9,8 +9,8 @@ export const LOAD_EXT_FORM_DATA_URL = () => {
 // ==================================================
 // QUESTS URLS
 // ==================================================
-export const GET_QUESTS_URL = (search: string, page: number) => {
-  return `${DOMAIN}/portal/admin/quests/?search_quest=${search}&page=${page}`;
+export const GET_QUESTS_URL = (search: string, page: number, code: string) => {
+  return `${DOMAIN}/portal/admin/quests/?search_quest=${search}&page=${page}&code=${code}`;
 };
 export const SAVE_QUEST_INSTANCE_URL = () => {
   return `${DOMAIN}/portal/admin/quests/save-instance/`;
@@ -32,8 +32,8 @@ export const SAVE_QUESTION_INSTANCE_URL = (questId: number | string) => {
 // ==================================================
 // BOOKEE URLS
 // ==================================================
-export const GET_BOOKS_URL = (search: string, page: number) => {
-  return `${DOMAIN}/portal/admin/library/?search_books=${search}&page=${page}`;
+export const GET_BOOKS_URL = (search: string, page: number, code: string) => {
+  return `${DOMAIN}/portal/admin/library/?search_books=${search}&page=${page}&code=${code}`;
 };
 export const SAVE_BOOK_INSTANCE_URL = () => {
   return `${DOMAIN}/portal/admin/library/save-instance/`;
@@ -53,3 +53,10 @@ export const DELETE_BOOK_CHAPTER_URL = (chapterId: string | number) => {
 // ==================================================
 export const GET_SUBSCRIPTIONS_URL = `${DOMAIN}/portal/admin/subscription-plans/`;
 export const SAVE_SUBSCRIPTION_INSTANCE_URL = `${DOMAIN}/portal/admin/subscription-plans/save-instance/`;
+
+// ==================================================
+// PARTNERSHIPS URLS
+// ==================================================
+export const GET_PARTNERS_URL = () => {
+  return `${DOMAIN}/portal/admin/partners/`;
+};

@@ -59,7 +59,11 @@ export default function QuestCard({ quest }: { quest: Quest }) {
             onClick={() => {
               showDialog(
                 <>
-                  <QuestForm instance={quest} isOrganizationInstance={false} />
+                  <QuestForm
+                    instance={quest}
+                    isMutableOrganizationInstance={false}
+                    organizationCode={quest.organization}
+                  />
                 </>
               );
             }}
