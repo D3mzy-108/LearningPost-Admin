@@ -4,9 +4,10 @@ import http from "@/utils/http";
 import { DOMAIN, GET_BOOKS_URL } from "@/utils/urls";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import BookCard, { Book } from "./BookCard";
+import BookCard from "./BookCard";
 import { useDialog } from "@/context/DialogContext";
 import BookForm from "./BookForm";
+import { Book } from "@/models/BookeeModels";
 
 export default function BookeeDisplay() {
   const { showToast } = useToast();

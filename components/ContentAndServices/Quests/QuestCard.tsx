@@ -2,23 +2,9 @@ import { DOMAIN } from "@/utils/urls";
 import Link from "next/link";
 import QuestForm from "./QuestForm";
 import { useDialog } from "@/context/DialogContext";
+import { Quest } from "@/models/QuestModels";
 
 /* eslint-disable @next/next/no-img-element */
-export interface Quest {
-  id: string | number;
-  cover: string;
-  title: string;
-  grade: string;
-  category: string;
-  time: number | string;
-  bookmark_count: number;
-  question_count: number;
-  rating: number;
-  about: string | null;
-  instructions: string | null;
-  organization: string | null;
-}
-
 export default function QuestCard({ quest }: { quest: Quest }) {
   const { showDialog } = useDialog();
 
@@ -83,7 +69,7 @@ export default function QuestCard({ quest }: { quest: Quest }) {
             <span>Modify</span>
           </button>
           <Link
-            href={""}
+            href={`/portal/content-and-services/quest/?q=${quest.title}&qid=${quest.id}`}
             className="w-full flex-1 bg-transparent border border-black/60 py-2 px-3 flex gap-2 items-center justify-center rounded-full truncate"
           >
             <span>&#9776;</span>

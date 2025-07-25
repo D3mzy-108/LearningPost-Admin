@@ -1,11 +1,11 @@
 "use client";
 import http from "@/utils/http";
-import { Quest } from "./QuestCard";
 import { useState, useEffect, FormEvent } from "react";
 import { LOAD_EXT_FORM_DATA_URL, SAVE_QUEST_INSTANCE_URL } from "@/utils/urls";
 import { useToast } from "@/context/ToastContext";
 import { useDialog } from "@/context/DialogContext";
 import { useRouter } from "next/navigation";
+import { Quest } from "@/models/QuestModels";
 
 export default function QuestForm({
   instance,
@@ -128,6 +128,7 @@ export default function QuestForm({
                 id="cover"
                 required={instance === null}
                 className="mt-1 block w-full rounded-md border-gray-300 bg-[rgba(0,0,0,.05)] p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                accept="image/*"
               />
             </div>
 

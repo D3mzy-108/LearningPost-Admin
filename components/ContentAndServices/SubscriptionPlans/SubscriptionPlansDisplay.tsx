@@ -33,20 +33,6 @@ export default function SubscriptionPlansDisplay() {
 
   return (
     <>
-      <style>
-        {`
-          table th, table td{
-            text-align: left;
-            padding: 0.5rem 0.75rem;
-          }
-          table tr{
-            border-bottom: 1px solid #00000040;
-          }
-          table tr:last-child{
-            border-botttom: none;
-          }
-        `}
-      </style>
       <div className="w-full p-6 flex flex-col gap-6">
         <button
           type="button"

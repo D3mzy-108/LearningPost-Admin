@@ -2,12 +2,12 @@
 import Pagination from "@/components/NavBars/Pagination";
 import { useToast } from "@/context/ToastContext";
 import http from "@/utils/http";
-import { DOMAIN, GET_QUESTS_URL } from "@/utils/urls";
-import Link from "next/link";
+import { GET_QUESTS_URL } from "@/utils/urls";
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import QuestCard, { Quest } from "./QuestCard";
+import QuestCard from "./QuestCard";
 import QuestForm from "./QuestForm";
 import { useDialog } from "@/context/DialogContext";
+import { Quest } from "@/models/QuestModels";
 
 export default function QuestsDisplay() {
   const { showToast } = useToast();

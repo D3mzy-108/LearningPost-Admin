@@ -1,10 +1,10 @@
 import { useToast } from "@/context/ToastContext";
-import { Book } from "./BookCard";
 import { useDialog } from "@/context/DialogContext";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import http from "@/utils/http";
 import { LOAD_EXT_FORM_DATA_URL, SAVE_BOOK_INSTANCE_URL } from "@/utils/urls";
+import { Book } from "@/models/BookeeModels";
 
 export default function BookForm({
   instance,
@@ -115,6 +115,7 @@ export default function BookForm({
                 id="cover"
                 required={instance === null}
                 className="mt-1 block w-full rounded-md border-gray-300 bg-[rgba(0,0,0,.05)] p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                accept="image/*"
               />
             </div>
 

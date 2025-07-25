@@ -2,49 +2,41 @@ import { DOMAIN } from "@/utils/urls";
 import Link from "next/link";
 import BookForm from "./BookForm";
 import { useDialog } from "@/context/DialogContext";
+import { Book } from "@/models/BookeeModels";
 
 /* eslint-disable @next/next/no-img-element */
-export interface Book {
-  id: string | number;
-  cover: string;
-  title: string;
-  author: string;
-  bookmark_count: number;
-  chapter_count: number;
-  rating: string | number;
-  about: string | null;
-  about_author: string | null;
-  organization: string | null;
-}
-
 export default function BookCard({ book }: { book: Book }) {
   const { showDialog } = useDialog();
 
   return (
-    <div className="w-full border-2 rounded-md">
-      <img
-        src={`${
-          book.cover.includes("https://") || book.cover.includes("http://")
-            ? book.cover
-            : DOMAIN + book.cover
-        }`}
-        alt={book.title}
-        onError={(e) => {
-          (e.target as HTMLImageElement).src =
-            "https://placehold.co/50x50/EEE/333333?text=";
-        }} // Fallback image
-        style={{
-          objectFit: "cover",
-          objectPosition: "top",
-          filter: "brightness(90%)",
-        }}
-        className="w-full aspect-[5/4] rounded-xl px-12 pt-6 pb-0"
-      />
-      <div className="w-full py-3 px-4">
+    <div className="w-full rounded-md">
+      <div className="w-full px-12 pt-6 pb-0">
+        <img
+          src={`${
+            book.cover.includes("https://") || book.cover.includes("http://")
+              ? book.cover
+              : DOMAIN + book.cover
+          }`}
+          alt={book.title}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src =
+              "https://placehold.co/50x50/EEE/333333?text=";
+          }} // Fallback image
+          style={{
+            objectFit: "cover",
+            objectPosition: "top",
+            filter: "brightness(90%)",
+          }}
+          className="w-full aspect-[6/5] rounded-t-lg"
+        />
+      </div>
+      <div className="w-full border-2 rounded-xl py-3 px-4">
         <div className="w-full flex gap-2">
           {/* BOOK DETAILS */}
           <div className="flex-1 flex flex-col">
-            <legend className="font-semibold text-lg">{book.title}</legend>
+            <div className="w-full font-semibold text-lg line-clamp-2">
+              {book.title}
+            </div>
             <span className="text-black/60 text-sm">
               {book.author} - {book.bookmark_count} Saves
             </span>
@@ -79,7 +71,7 @@ export default function BookCard({ book }: { book: Book }) {
             <span>Modify</span>
           </button>
           <Link
-            href={""}
+            href={"/portal/content-and-services/bookee/?bid=" + book.id}
             className="w-full flex-1 bg-transparent border border-black/60 py-2 px-3 flex gap-2 items-center justify-center rounded-full truncate"
           >
             <span>&#9776;</span>
