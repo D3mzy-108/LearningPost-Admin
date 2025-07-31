@@ -18,12 +18,7 @@ export default function Home() {
     e.preventDefault();
     try {
       const formData = new FormData(e.target as HTMLFormElement);
-      const email = formData.get("email");
-      const password = formData.get("password");
-      const data = await http.post(LOGIN_URL, {
-        email: email,
-        password: password,
-      });
+      const data = await http.multipartPost(LOGIN_URL, formData);
 
       showToast(data.message, data.success ? "success" : "error");
 
