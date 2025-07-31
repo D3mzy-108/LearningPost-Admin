@@ -60,3 +60,24 @@ export const SAVE_SUBSCRIPTION_INSTANCE_URL = `${DOMAIN}/portal/admin/subscripti
 export const GET_PARTNERS_URL = () => {
   return `${DOMAIN}/portal/admin/partners/`;
 };
+export const GET_PARTNER_TESTS_URL = (search: string, code: string) => {
+  return `${DOMAIN}/portal/admin/partners/tests/?q=${search}&code=${code}`;
+};
+export const SAVE_TEST_INSTANCE_URL = () => {
+  return `${DOMAIN}/portal/admin/partners/tests/save-instance/`;
+};
+export const FETCH_TEST_QUESTIONS_URL = (
+  testId: string | number,
+  search: string,
+  page: number
+) => {
+  return `${DOMAIN}/portal/admin/partners/tests/${testId}/get-questions/?search_questions=${search}&page=${page}`;
+};
+export const UPLOAD_TEST_QUESTIONS_FILE_URL = (testId: string | number) => {
+  return `${DOMAIN}/portal/admin/partners/tests/${testId}/upload-questions/bulk/`;
+};
+export const SAVE_SINGLE_INSTANCE_TEST_QUESTIONS_URL = (
+  testId: string | number
+) => {
+  return `${DOMAIN}/portal/admin/partners/tests/${testId}/save-question/single-instance/`;
+};

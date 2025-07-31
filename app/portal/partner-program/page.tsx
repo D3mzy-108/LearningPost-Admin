@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import rightArrowIcon from "@/assets/icons/right-arrow.svg";
 import Image from "next/image";
+import { Partner } from "@/models/PartnerModels";
 
 export default function PartnerProgram() {
   const [partners, setPartners] = useState<Partner[]>([]);
@@ -66,7 +67,7 @@ export default function PartnerProgram() {
                       </div>
                     </td>
                     <td>
-                      <div className="w-full flex text-black/60 italic truncate">
+                      <div className="w-full flex text-black/60 italic truncate text-sm">
                         #{partner.code}
                       </div>
                     </td>

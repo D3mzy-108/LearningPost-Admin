@@ -6,7 +6,9 @@ import http from "@/utils/http";
 import {
   DOMAIN,
   SAVE_QUESTION_INSTANCE_URL,
+  SAVE_SINGLE_INSTANCE_TEST_QUESTIONS_URL,
   UPLOAD_QUESTIONS_FILE_URL,
+  UPLOAD_TEST_QUESTIONS_FILE_URL,
 } from "@/utils/urls";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,9 +17,11 @@ import { FormEvent, useState } from "react";
 export default function QuestionForm({
   question,
   questId,
+  isCBTQuestion,
 }: {
   question: Question | null;
   questId: string | number;
+  isCBTQuestion: boolean;
 }) {
   const [keyEntryMode, setKeyEntryMode] = useState(false);
   const uploadFormTypes: Tab[] = [
@@ -43,9 +47,16 @@ export default function QuestionForm({
               <Tabs tabs={uploadFormTypes} />
               <div className="mt-5">
                 {keyEntryMode ? (
-                  <KeyEntryForm question={question} questId={questId} />
+                  <KeyEntryForm
+                    question={question}
+                    questId={questId}
+                    isCBTQuestionUpload={isCBTQuestion}
+                  />
                 ) : (
-                  <BulkUploadForm questId={questId} />
+                  <BulkUploadForm
+                    questId={questId}
+                    isCBTQuestionUpload={isCBTQuestion}
+                  />
                 )}
               </div>
             </div>
@@ -56,7 +67,11 @@ export default function QuestionForm({
               <h2 className="text-2xl font-bold text-gray-800 mb-6">
                 {`Edit Question #${question.questionid}`}
               </h2>
-              <KeyEntryForm question={question} questId={questId} />
+              <KeyEntryForm
+                question={question}
+                questId={questId}
+                isCBTQuestionUpload={isCBTQuestion}
+              />
             </div>
           </>
         )}
@@ -68,7 +83,13 @@ export default function QuestionForm({
 // ===================================================================================
 // FORM TO UPLOAD QUESTIONS IN BULK
 // ===================================================================================
-function BulkUploadForm({ questId }: { questId: string | number }) {
+function BulkUploadForm({
+  questId,
+  isCBTQuestionUpload,
+}: {
+  questId: string | number;
+  isCBTQuestionUpload: boolean;
+}) {
   const router = useRouter();
   const { showToast } = useToast();
   const { hideDialog } = useDialog();
@@ -78,10 +99,20 @@ function BulkUploadForm({ questId }: { questId: string | number }) {
     e.preventDefault();
     setIsSaving(true);
     const formData = new FormData(e.target as HTMLFormElement);
-    const response = await http.multipartPost(
-      UPLOAD_QUESTIONS_FILE_URL(questId),
-      formData
-    );
+    let response;
+    if (!isCBTQuestionUpload) {
+      // SAVE QUESTIONS FOR QUEST
+      response = await http.multipartPost(
+        UPLOAD_QUESTIONS_FILE_URL(questId),
+        formData
+      );
+    } else {
+      // SAVE QUESTIONS FOR TEST
+      response = await http.multipartPost(
+        UPLOAD_TEST_QUESTIONS_FILE_URL(questId),
+        formData
+      );
+    }
     if (response.success) {
       router.refresh();
       showToast(response.message, "success");
@@ -232,9 +263,11 @@ function BulkUploadForm({ questId }: { questId: string | number }) {
 function KeyEntryForm({
   question,
   questId,
+  isCBTQuestionUpload,
 }: {
   question: Question | null;
   questId: string | number;
+  isCBTQuestionUpload: boolean;
 }) {
   const textAreaFields = [
     {
@@ -277,13 +310,6 @@ function KeyEntryForm({
       sub: "",
       name: "d",
       value: `${question?.d ?? ""}`,
-      required: true,
-    },
-    {
-      label: "Explanation",
-      sub: "",
-      name: "explanation",
-      value: `${question?.explanation ?? ""}`,
       required: true,
     },
   ];
@@ -334,10 +360,20 @@ function KeyEntryForm({
 
     //   SAVE QUESTION INSTANCE
     setIsSaving(true);
-    const response = await http.multipartPost(
-      SAVE_QUESTION_INSTANCE_URL(questId),
-      formData
-    );
+    let response;
+    if (!isCBTQuestionUpload) {
+      // SAVE QUESTION INSTANCE FOR QUEST
+      response = await http.multipartPost(
+        SAVE_QUESTION_INSTANCE_URL(questId),
+        formData
+      );
+    } else {
+      // SAVE QUESTION INSTANCE FOR TEST
+      response = await http.multipartPost(
+        SAVE_SINGLE_INSTANCE_TEST_QUESTIONS_URL(questId),
+        formData
+      );
+    }
     if (response.success) {
       router.refresh();
       showToast(response.message, "success");
@@ -423,23 +459,45 @@ function KeyEntryForm({
           </div>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label
-            htmlFor="topic"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Topic:
-          </label>
-          <small className="text-xs text-black/40"></small>
-          <input
-            type="text"
-            name="topic"
-            id="topic"
-            defaultValue={question?.topic ?? ""}
-            required
-            className="mt-2 block w-full rounded-md border-gray-300 bg-[rgba(0,0,0,.05)] p-3 shadow-sm focus:outline-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
-        </div>
+        {/* EXPLANATION */}
+        {!isCBTQuestionUpload && (
+          <>
+            <div className="flex flex-col gap-1">
+              <label
+                htmlFor={"explanation"}
+                className="block text-sm font-medium text-gray-700"
+              >
+                Explanation:
+              </label>
+              <textarea
+                name={"explanation"}
+                id={"explanation"}
+                rows={3}
+                required={true}
+                defaultValue={`${question?.explanation ?? ""}`}
+                className="mt-2 block w-full rounded-md border-gray-300 bg-[rgba(0,0,0,.05)] p-3 shadow-sm focus:outline-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label
+                htmlFor="topic"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Topic:
+              </label>
+              <small className="text-xs text-black/40"></small>
+              <input
+                type="text"
+                name="topic"
+                id="topic"
+                defaultValue={question?.topic ?? ""}
+                required
+                className="mt-2 block w-full rounded-md border-gray-300 bg-[rgba(0,0,0,.05)] p-3 shadow-sm focus:outline-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </>
+        )}
 
         {/* QUESTION ID FIELD */}
         {question !== null && (

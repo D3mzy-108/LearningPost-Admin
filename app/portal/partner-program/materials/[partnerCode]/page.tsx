@@ -2,6 +2,7 @@
 import BookeeDisplay from "@/components/ContentAndServices/Bookee/BookeeDisplay";
 import QuestsDisplay from "@/components/ContentAndServices/Quests/QuestsDisplay";
 import Tabs, { Tab } from "@/components/NavBars/Tabs";
+import TestsDisplay from "@/components/PartnerProgram/Tests/TestsDisplay";
 import { useParams, useSearchParams } from "next/navigation";
 
 export default function PartnerMaterials() {
@@ -32,7 +33,7 @@ export default function PartnerMaterials() {
     } else if (activeTabId === "learning-resources") {
       return <BookeeDisplay partnerCode={partnerCode.toString()} />;
     } else if (activeTabId === "cbt") {
-      return <></>;
+      return <TestsDisplay partnerCode={partnerCode.toString()} />;
     }
   }
 

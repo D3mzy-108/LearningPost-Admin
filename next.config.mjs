@@ -1,4 +1,24 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "2002",
+        pathname: "/media/**",
+        // search: "",
+      },
+      {
+        protocol: "https",
+        hostname: "api.learningpost.ng",
+        port: "",
+        pathname: "/media/**",
+        // search: "",
+      },
+    ],
+  },
+};
 
 export default nextConfig;

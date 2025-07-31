@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useDialog } from "@/context/DialogContext";
 import { useToast } from "@/context/ToastContext";
@@ -10,6 +9,7 @@ import {
   FETCH_BOOK_CHAPTERS_URL,
   UPLOAD_BOOK_CHAPTER_URL,
 } from "@/utils/urls";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -63,7 +63,7 @@ export default function BookView() {
       <div className="w-full space-y-8 py-4 md:px-2">
         <div className="w-full flex gap-4 items-center border-b-2 pb-4 px-2">
           {/* COVER */}
-          <img
+          <Image
             src={`${
               book.cover.includes("https://") || book.cover.includes("http://")
                 ? book.cover
@@ -77,8 +77,9 @@ export default function BookView() {
             style={{
               objectFit: "fill",
             }}
-            className="rounded-lg aspect-[4/6] bg-gray-200"
+            className="rounded-lg w-[75px] aspect-[4/6] bg-gray-200"
             width={75.0}
+            height={"0"}
           />
 
           {/* QUEST TITLE */}

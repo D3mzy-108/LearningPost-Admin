@@ -4,42 +4,45 @@ import QuestionForm from "@/components/ContentAndServices/Quests/QuestionForm";
 import Pagination from "@/components/NavBars/Pagination";
 import { useDialog } from "@/context/DialogContext";
 import { useToast } from "@/context/ToastContext";
-import { Quest, Question } from "@/models/QuestModels";
+import { Test } from "@/models/PartnerModels";
+import { Question } from "@/models/QuestModels";
 import http from "@/utils/http";
-import { DOMAIN, FETCH_QUESTIONS_URL } from "@/utils/urls";
+import { DOMAIN, FETCH_TEST_QUESTIONS_URL } from "@/utils/urls";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function QuestView() {
+export default function TestView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { showToast } = useToast();
   const { showDialog } = useDialog();
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [quest, setQuest] = useState<Quest | null>(null);
+  const [test, setTest] = useState<Test | null>(null);
   const [page, setPage] = useState<string>("0 of 0");
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [questionCount, setQuestionCount] = useState<number>(0);
   const [maxPageNumber, setMaxPageNumber] = useState<number>(1);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function fetchQuestions() {
-      const questId = searchParams.get("qid");
-      if (questId === null) {
+      const testID = searchParams.get("testID");
+      if (testID === null) {
         showToast("Quest not Found", "warning");
-        router.push("/portal/content-and-services/");
+        router.back();
         return;
       }
       const response = await http.get(
-        FETCH_QUESTIONS_URL(questId, search, pageNumber)
+        FETCH_TEST_QUESTIONS_URL(testID, search, pageNumber)
       );
       if (!response.success) {
         showToast(response.message, "error");
       } else {
         setQuestions(response.data.questions);
-        setQuest(response.data.quest);
+        setTest(response.data.test);
         setPage(response.data.page);
+        setQuestionCount(response.data.question_count);
         setMaxPageNumber(response.data.num_pages);
       }
     }
@@ -47,7 +50,7 @@ export default function QuestView() {
     fetchQuestions();
   }, [pageNumber, router, search, searchParams, showToast]);
 
-  if (quest === null) {
+  if (test === null) {
     return <div className="grid place-items-center">Loading...</div>;
   }
 
@@ -58,12 +61,11 @@ export default function QuestView() {
           {/* COVER */}
           <Image
             src={`${
-              quest.cover.includes("https://") ||
-              quest.cover.includes("http://")
-                ? quest.cover
-                : DOMAIN + quest.cover
+              test.cover.includes("https://") || test.cover.includes("http://")
+                ? test.cover
+                : DOMAIN + test.cover
             }`}
-            alt={quest.title}
+            alt={test.title}
             onError={(e) => {
               (e.target as HTMLImageElement).src =
                 "https://placehold.co/50x50/EEE/333333?text=";
@@ -79,14 +81,14 @@ export default function QuestView() {
           {/* QUEST TITLE */}
           <div className="flex-1">
             <legend className="text-2xl font-bold mb-1 truncate">
-              {quest.title}
+              {test.title}
             </legend>
             <p className="text-sm text-black/70">
-              <span>{quest.question_count} Questions</span>
+              <span>{test.attempts} Attempts</span>
               <span className="mx-1">|</span>
-              <span>{quest.grade}</span>
+              <span>{test.status}</span>
               <span className="mx-1">|</span>
-              <span>{quest.category}</span>
+              <span>{questionCount} Questions</span>
             </p>
           </div>
 
@@ -94,7 +96,13 @@ export default function QuestView() {
           <button
             type="button"
             onClick={() => {
-              showDialog(<QuestionForm question={null} questId={quest.id} />);
+              showDialog(
+                <QuestionForm
+                  question={null}
+                  questId={test.id}
+                  isCBTQuestion={true}
+                />
+              );
             }}
             className="rounded-lg bg-gray-200 text-sm"
           >
@@ -133,8 +141,8 @@ export default function QuestView() {
             <QuestionCard
               key={question.questionid}
               question={question}
-              questId={quest.id}
-              isCBTQuestion={false}
+              questId={test.id}
+              isCBTQuestion={true}
             />
           ))}
         </div>
