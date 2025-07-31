@@ -94,7 +94,13 @@ export default function QuestView() {
           <button
             type="button"
             onClick={() => {
-              showDialog(<QuestionForm question={null} questId={quest.id} />);
+              showDialog(
+                <QuestionForm
+                  question={null}
+                  questId={quest.id}
+                  isCBTQuestion={false}
+                />
+              );
             }}
             className="rounded-lg bg-gray-200 text-sm"
           >
